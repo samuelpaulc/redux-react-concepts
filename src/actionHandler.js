@@ -6,3 +6,13 @@ export function updateCounter (counters, index, isIncrement) {
         ...counters.slice(index + 1)
     ];
 }
+
+export function addTodo(todos, id, text) {
+    return [
+        ...todos,
+        { 
+            id,
+            text
+        }
+    ];
+}
