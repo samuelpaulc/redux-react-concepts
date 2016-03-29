@@ -1,14 +1,14 @@
 import makeStore from './store.js';
 import React from 'react';
 import ReactDom from 'react-dom';
-import Todo from './Todo.js';
+import { TodoApp } from './Todo.js';
 
 
 export const store = makeStore();
 
 const render = () => {
     ReactDom.render(
-        <Todo {...store.getState()} />,
+        <TodoApp {...store.getState()} />,
         document.getElementById('app')
     )
 }

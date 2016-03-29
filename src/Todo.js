@@ -8,7 +8,8 @@ let store = makeStore();
 const FilterLink = ({
     filter,
     currentFilter,
-    children
+    children,
+    onClick
 }) => {
     if (currentFilter === filter) {
         return <span>{children}</span>;
@@ -19,10 +20,7 @@ const FilterLink = ({
             onClick={
                 e => {
                     e.preventDefault();
-                    store.dispatch({
-                        type: 'SET_VISIBILITY_FILTER',
-                        filter: filter
-                    })
+                    onClick(filter);
                 }
             }
         >
@@ -47,6 +45,26 @@ const getVisibleTodos = (todos, filter) => {
             return todos;
     }
 }
+
+// component needs to have a single root element hence wrapping with a div
+const AddTodo = ({
+    onAddClick
+}) => {
+    let input;
+    return (
+        <div>
+            <input ref={ node => {
+                input = node;
+            }} />
+            <button onClick={() => {
+                onAddClick(input.value || 'Test');
+                input.value = '';
+            }}>
+            Add Todo
+            </button>
+        </div>
+    );
+};
 
 const TodoView = ({
     onClick,
@@ -77,85 +95,75 @@ const TodoListView = ({
     </ul>
 );
 
-export default class Todo extends Component {
-    render() {
-        const { todos, visibilityFilter } = this.props;
-        const visibleTodos = getVisibleTodos(todos, visibilityFilter);
-        return (
-            <div>
-                <input ref={ node => {
-                        this.input = node;
-                    }} />
-                <button onClick={() => {
-                    store.dispatch({
-                        type: 'ADD_TODO',
-                        text: this.input.value || 'Test',
-                        id: nextTodoId++
-                    });
-                    this.input.value = '';
-                }}>
-                Add Todo
-                </button>
-                <TodoListView
-                    todos={visibleTodos}
-                    onTodoClick={id => {
-                        store.dispatch({
-                            type: 'TOGGLE_TODO',
-                            id
-                        })
-                    }}/>
+const Footer = ({
+    visibilityFilter,
+    onFilterClick
+}) => (
+    <p>
+        <FilterLink
+            filter='ALL'
+            currentFilter={visibilityFilter}
+            onClick={onFilterClick}
+        >
+            All
+        </FilterLink>
+        {' '}
+        <FilterLink
+            filter='ACTIVE'
+            currentFilter={visibilityFilter}
+            onClick={onFilterClick}
+        >
+            Active
+        </FilterLink>
+        {' '}
+        <FilterLink
+            filter='COMPLETED'
+            currentFilter={visibilityFilter}
+            onClick={onFilterClick}
+        >
+            Completed
+        </FilterLink>
+    </p>
+);
 
-                Show:
-                <p>
-                    <FilterLink
-                        filter='ALL'
-                        currentFilter={visibilityFilter}
-                        onClick={
-                            e => {
-                                e.preventDefault();
-                                store.dispatch({
-                                    type: 'SET_VISIBILITY_FILTER',
-                                    filter
-                                })
-                            }
-                        }
-                    >
-                        All
-                    </FilterLink>
-                    {' '}
-                    <FilterLink
-                        filter='ACTIVE'
-                        currentFilter={visibilityFilter}
-                        onClick={
-                            e => {
-                                e.preventDefault();
-                                store.dispatch({
-                                    type: 'SET_VISIBILITY_FILTER',
-                                    filter
-                                })
-                            }
-                        }
-                    >
-                        Active
-                    </FilterLink>
-                    {' '}
-                    <FilterLink
-                        filter='COMPLETED'
-                        currentFilter={visibilityFilter}
-                        onClick={
-                            e => {
-                                e.preventDefault();
-                                store.dispatch({
-                                    type: 'SET_VISIBILITY_FILTER',
-                                    filter
-                                })
-                            }
-                        }
-                    >
-                        Completed
-                    </FilterLink>
-                </p>
-            </div>
-        );
-    }
-}
+// Container Component
+// export default class Todo extends Component {
+export const TodoApp = ({
+    todos,
+    visibilityFilter
+}) => (
+    <div>
+        <AddTodo
+            onAddClick={text => {
+                store.dispatch({
+                    type: 'ADD_TODO',
+                    id: nextTodoId++,
+                    text
+                });
+            }
+        } />
+        <TodoListView
+            todos={getVisibleTodos(
+                    todos,
+                    visibilityFilter
+                )
+            }
+            onTodoClick={id => {
+                store.dispatch({
+                    type: 'TOGGLE_TODO',
+                    id
+                })
+            }}/>
+
+        Show:
+        <Footer
+            visibilityFilter={visibilityFilter}
+            onFilterClick={filter =>
+                store.dispatch({
+                    type: 'SET_VISIBILITY_FILTER',
+                    filter
+                })
+            }
+        />
+    </div>
+)
