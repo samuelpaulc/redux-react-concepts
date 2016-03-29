@@ -48,6 +48,35 @@ const getVisibleTodos = (todos, filter) => {
     }
 }
 
+const TodoView = ({
+    onClick,
+    completed,
+    text
+}) => (
+    <li
+        onClick={onClick}
+        style={{
+            textDecoration: completed ? 'line-through' : 'none'
+        }}>
+        {text}
+    </li>
+);
+
+
+const TodoListView = ({
+    todos,
+    onTodoClick
+}) => (
+    <ul>
+        {todos.map(todo =>
+            <TodoView 
+                key={todo.id}
+                {...todo}
+                onClick={() => { onTodoClick(todo.id) }} />
+        )}
+    </ul>
+);
+
 export default class Todo extends Component {
     render() {
         const { todos, visibilityFilter } = this.props;
@@ -67,23 +96,14 @@ export default class Todo extends Component {
                 }}>
                 Add Todo
                 </button>
-                <ul>
-                    {visibleTodos.map(todo => 
-                        <li key={todo.id}
-                            onClick={ () => {
-                                    store.dispatch({
-                                        type: 'TOGGLE_TODO',
-                                        id: todo.id
-                                    });
-                                }
-                            }
-                            style={{
-                                textDecoration: todo.completed ? 'line-through' : 'none'
-                            }}>
-                            {todo.text}
-                        </li>
-                    )}
-                </ul>
+                <TodoListView
+                    todos={visibleTodos}
+                    onTodoClick={id => {
+                        store.dispatch({
+                            type: 'TOGGLE_TODO',
+                            id
+                        })
+                    }}/>
 
                 Show:
                 <p>
