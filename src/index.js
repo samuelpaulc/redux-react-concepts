@@ -1,7 +1,7 @@
 import makeStore from './store.js';
 import React from 'react';
 import ReactDom from 'react-dom';
-import { TodoApp } from './Todo.js';
+import { TodoApp } from './TodoApp.js';
 
 
 export const store = makeStore();
