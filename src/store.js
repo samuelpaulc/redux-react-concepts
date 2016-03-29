@@ -1,6 +1,12 @@
 import { createStore } from 'redux';
 import reducer from './reducer.js';
 
-export default function makeStore () {
-    return createStore(reducer);
+let store;
+
+export default function makeStore() {
+    if (store) {
+        return store;
+    }
+    store = createStore(reducer); 
+    return store;
 }

@@ -16,7 +16,7 @@ const todo = (state, action) => {
                 return state;
             }
             // return {
-            //     ...state,
+            //     {...state}
             //     completed: !state.completed
             // };
             return {
@@ -47,7 +47,7 @@ const todos = (state = [], action) => {
 
 const visibilityFilter = (state = 'SHOW_ALL', action) => {
     switch(action.type) {
-        case 'VISIBILITY_FILTER':
+        case 'SET_VISIBILITY_FILTER':
             return action.filter;
         default:
             return state;

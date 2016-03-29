@@ -8,7 +8,7 @@ export const store = makeStore();
 
 const render = () => {
     ReactDom.render(
-        <Todo todos={store.getState().todos || []} store={store} />,
+        <Todo {...store.getState()} />,
         document.getElementById('app')
     )
 }
