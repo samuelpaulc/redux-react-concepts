@@ -1,13 +1,18 @@
 import makeStore from './store.js';
 import React from 'react';
-import ReactDom from 'react-dom';
+import ReactDOM from 'react-dom';
 import { TodoApp } from './TodoApp.js';
+import Board from './chess/Board.js';
+
+// dnd
+import { DragSource, DropTarget } from 'react-dnd';
+var PropTypes = React.PropTypes;
 
 
 export const store = makeStore();
 
 const render = () => {
-    ReactDom.render(
+    ReactDOM.render(
         <TodoApp {...store.getState()} />,
         document.getElementById('app')
     )
@@ -20,3 +25,7 @@ store.subscribe( () => {
     render();
 });
 
+ReactDOM.render(
+  <Board knightPosition={[0, 0]} />,
+  document.getElementById('chess')
+);
