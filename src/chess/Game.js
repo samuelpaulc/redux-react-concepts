@@ -1,7 +1,7 @@
 let knightPosition = [0, 0];
 let observer = null;
 
-function emitChange() {
+function emitChange(knightPosition) {
   observer(knightPosition);
 }
 
@@ -11,7 +11,10 @@ export function observe(o) {
   }
 
   observer = o;
-  emitChange();
+  setInterval(() => emitChange([
+    Math.floor(Math.random() * 8),
+    Math.floor(Math.random() * 8)
+  ]), 500);
 }
 
 export function moveKnight(toX, toY) {

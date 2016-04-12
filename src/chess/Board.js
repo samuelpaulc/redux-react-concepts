@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import Square from './Square.js';
 import Knight from './Knight.js';
 import { moveKnight } from './Game.js';
+import HTML5Backend from 'react-dnd-html5-backend';
 
 export default class Board extends Component {
     renderSquare(i) {
